@@ -1,4 +1,4 @@
-package br.com.alura.alurator.playground.anotacao;
+package br.com.alura.alurator.anotacao;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
