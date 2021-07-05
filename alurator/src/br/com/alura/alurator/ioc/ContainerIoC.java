@@ -4,13 +4,23 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 public class ContainerIoC {
 
+	private Map<Class<?>, Class<?>> mapaDeTipos = new HashMap<>();
+	
 	public Object getInstancia(Class<?> tipoFonte) {
+		Class<?> tipoDestino = mapaDeTipos.get(tipoFonte);
+		
+		if(tipoDestino != null) {
+			return getInstancia(tipoDestino);
+		}
+		
 		Stream<Constructor<?>> construtores = 
 				Stream.of(tipoFonte.getDeclaredConstructors());
 		
@@ -19,7 +29,7 @@ public class ContainerIoC {
 				.filter(construtor -> construtor.getParameterCount() == 0)
 				.findFirst();
 		
-		try {
+		try { 
 			if(construtorPadrao.isPresent()) {
 				Object instancia = construtorPadrao.get().newInstance();
 				return instancia;
@@ -39,5 +49,35 @@ public class ContainerIoC {
 				IllegalArgumentException |InvocationTargetException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public void registra(Class<?> tipoFonte, Class<?> tipoDestino) {
+		
+		boolean compativel = verificaCompatibilidade(tipoFonte, tipoDestino);
+		
+		if(!compativel) {
+			throw new ClassCastException("Não é possível resolver " + tipoFonte + " para " + tipoDestino);
+		}
+		
+		mapaDeTipos.put(tipoFonte, tipoDestino);
+	}
+
+	private boolean verificaCompatibilidade(Class<?> tipoFonte, Class<?> tipoDestino) {
+
+		// TODO - código na raça
+//		boolean compativel;
+//		
+//		if(tipoFonte.isInterface()) {
+//			compativel = Stream.of(tipoDestino.getInterfaces())
+//				.anyMatch(interfaceImplementada -> interfaceImplementada.equals(tipoFonte));
+//		}else {
+//			compativel =
+//					tipoDestino.getSuperclass().equals(tipoFonte) || tipoDestino.equals(tipoFonte);
+//		}
+//		
+//		return compativel;
+		
+		// TODO - código refatorado com API de Reflection
+		return tipoFonte.isAssignableFrom(tipoDestino); // verifica se é possível converter um tipo no outro
 	}
 }

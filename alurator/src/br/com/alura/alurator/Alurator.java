@@ -1,6 +1,5 @@
 package br.com.alura.alurator;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import br.com.alura.alurator.conversor.ConversorXML;
@@ -49,5 +48,9 @@ public class Alurator {
 		retorno = new ConversorXML().converte(retorno);
 		
 		return retorno;
+	}
+
+	public void registra(Class<?> tipoFonte, Class<?> tipoDestino) {
+		container.registra(tipoFonte, tipoDestino);
 	}
 }
