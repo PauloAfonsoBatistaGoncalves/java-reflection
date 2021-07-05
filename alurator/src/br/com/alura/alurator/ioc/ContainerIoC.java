@@ -51,33 +51,9 @@ public class ContainerIoC {
 		}
 	}
 
-	public void registra(Class<?> tipoFonte, Class<?> tipoDestino) {
-		
-		boolean compativel = verificaCompatibilidade(tipoFonte, tipoDestino);
-		
-		if(!compativel) {
-			throw new ClassCastException("Não é possível resolver " + tipoFonte + " para " + tipoDestino);
-		}
+	public <T, K extends T> void registra(Class<T> tipoFonte, Class<K> tipoDestino) {
 		
 		mapaDeTipos.put(tipoFonte, tipoDestino);
 	}
 
-	private boolean verificaCompatibilidade(Class<?> tipoFonte, Class<?> tipoDestino) {
-
-		// TODO - código na raça
-//		boolean compativel;
-//		
-//		if(tipoFonte.isInterface()) {
-//			compativel = Stream.of(tipoDestino.getInterfaces())
-//				.anyMatch(interfaceImplementada -> interfaceImplementada.equals(tipoFonte));
-//		}else {
-//			compativel =
-//					tipoDestino.getSuperclass().equals(tipoFonte) || tipoDestino.equals(tipoFonte);
-//		}
-//		
-//		return compativel;
-		
-		// TODO - código refatorado com API de Reflection
-		return tipoFonte.isAssignableFrom(tipoDestino); // verifica se é possível converter um tipo no outro
-	}
 }
